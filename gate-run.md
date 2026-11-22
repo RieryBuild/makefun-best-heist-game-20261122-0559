@@ -2,8 +2,12 @@
 
 Builder run: 22 Nov 2026, ~14:50–15:20 WITA. Entry: **THE GILDED HOUR**.
 Repo: https://github.com/RieryBuild/makefun-best-heist-game-20261122-0559
-Commit (GitHub HEAD): `6b850ae3d4e0722106290320450fac2fe94b79eb`
-Local commit (same tree, verified blob-by-blob 22/22): `a1101128b360090faa8586ff8312c72f736e1627`
+Commit (GitHub HEAD): `6e9f50016caf576e266e8925f06980c5bbbd1e47` (this commit only adds
+this file; the game commit is `6b850ae3d4e0722106290320450fac2fe94b79eb` — game/,
+screenshots/, main.ts, vendor/ are byte-identical between the two)
+Local commit (same tree as the game commit, verified blob-by-blob 22/22): `a1101128b360090faa8586ff8312c72f736e1627`
+Note: the copy of this file inside the repo still names the game commit; this local
+copy names the final HEAD. The scored files are identical either way.
 Builder session id (for bundling): `c32ec774-8ece-40e2-91f8-24b26feb98c5`
 Kit: level 36, build 79d7b7dbf92d. Competition opened 13:59 WITA, closes 23 Nov 01:59 WITA.
 
@@ -35,7 +39,7 @@ Gate 3 (coordinator literal audit + submit) is the coordinator's step, not the b
 | Row | Result | Evidence |
 |-----|--------|----------|
 | Complete heist game, keyboard+mouse, original | PASS | 5 original heists, own names/art/sounds; all code written in-session; no other entry's code read or copied; starter game code never read |
-| Screenshots show room + guards + cones + cameras + loot + alarm in one frame | PASS | `2-play.jpg` viewed full-size: room, 2 guard cones, camera arc, loot (gold, glowing), alarm meter, HUD, FIELD NOTES — all in one 1280×720 frame |
+| Screenshots show room + guards + cones + cameras + loot + alarm in one frame | PASS | `1-play.jpg` viewed full-size: room, 2 guard cones, camera arc, loot (gold, glowing), alarm meter, HUD, FIELD NOTES — all in one 1280×720 frame |
 | game/ static, no build step, no network | PASS | Shot runs recorded 0 external requests, 0 failed requests, 0 page errors; grep for `http://`/`https://` in game/ = none (only localhost comments in main.ts/serve.ts, not loaded by the game) |
 | main.ts at root, Node 22 stdlib only | PASS | Written by builder from the pattern (not pasted); copies game/ + screenshots/, writes dossier.json via `buildDossier`; twin-run byte-identical (see below) |
 | screenshots 3–4, real renders of own code | PASS | 4 JPEG, deterministic scenes (`?shot=title\|play\|alarm\|win&seed=1`, fixed dt=1/60); re-rendered twice → byte-identical sha256 (see below) |
@@ -45,7 +49,7 @@ Gate 3 (coordinator literal audit + submit) is the coordinator's step, not the b
 | .makefun/owner.json wallet 6do8 | PASS | Read back via PAT API: `{"wallet":"6do8zGw4FPLCB1Cq44G8r8KwQccbhHUqtAptaRji6ALk"}` |
 | game_files caps | PASS | game/: 11 files, 13 entries total, 70,966 B (≤993 / ≤48 MiB); index.html 863 B (≤1 MiB); /output: 20 entries, 980,247 B (≤1000 / ≤64 MiB) |
 | references | PASS | Every `<script src>` / import is a relative file inside game/; no bare specifiers, no import map, no network URLs |
-| screenshots caps | PASS | 4 files, 54,591 / 117,321 / 110,406 / 75,408 B (each ≤256 KiB); all 1280×720 JPEG (long ≤1280, short ≥480) |
+| screenshots caps | PASS | 4 files, 117,321 / 54,591 / 110,406 / 75,408 B (each ≤256 KiB); all 1280×720 JPEG (long ≤1280, short ≥480) |
 | dossier_matches | PASS by construction + twin-run | dossier.json is exactly what `buildDossier` wrote (main.ts calls it directly); 551,555 B (≤1.5 MiB); dossier text 71,744 B (≤163,840); twin runs byte-identical |
 | js_parses | PASS | All 9 game modules import cleanly in Node; main.js syntax OK + runs in Chrome with 0 page errors across all shots + play-test |
 | README (3 live badges) | PASS | Read back via PAT API: 3 `make.fun/badge` images, no `{owner}`/`{repo}`/`{referral_code}` placeholders; referral `wa8s3t3t` (same account code as the stealth entries) |
@@ -67,7 +71,7 @@ correct starts incl. heist 5 start (860,592)); H toggles FIELD NOTES true→fals
 ## Determinism
 
 - Screenshots: two full re-renders, sha256 identical all 4 files:
-  `1-title.jpg a7f9a57c…`, `2-play.jpg 14eecea5…`, `3-alarm.jpg 97682c54…`, `4-win.jpg 2bb6413f…`
+  `1-play.jpg 14eecea5…`, `2-title.jpg a7f9a57c…`, `3-alarm.jpg 97682c54…`, `4-win.jpg 2bb6413f…`
   (run-1 hashes re-verified with `sha256sum -c`: all OK).
 - main.ts twin-run: `MAKEFUN_OUTPUT_DIR=/tmp/outA node main.ts` vs `/tmp/outB` →
   `diff -r` identical, dossier byte-identical.
@@ -90,17 +94,30 @@ are satisfied by the evidence above (public repo, owner.json, created after open
 
 | File | Size | Dims | Shows |
 |------|------|------|-------|
-| 1-title.jpg (cover) | 54,591 B | 1280×720 | Title screen over a dimmed live room, 5-heist list, controls |
-| 2-play.jpg | 117,321 B | 1280×720 | Active play: room + cones + camera arc + loot + alarm meter + HUD + FIELD NOTES + 3 annotated callouts |
+| 1-play.jpg (cover) | 117,321 B | 1280×720 | Active play: room + cones + camera arc + loot + alarm meter + HUD + FIELD NOTES + 3 annotated callouts |
+| 2-title.jpg | 54,591 B | 1280×720 | Title screen over a dimmed live room, 5-heist list, controls |
 | 3-alarm.jpg | 110,406 B | 1280×720 | SPOTTED! banner, red alert cone, chasing guard, alarm 88, 1 strike |
 | 4-win.jpg | 75,408 B | 1280×720 | CLEAN GETAWAY overlay: loot + time + tools + GHOST +500, score 2,309 |
 
+## Fix-up: cover swap — active play is now the cover (22 Nov 2026, ~15:20 WITA)
+
+Rename only, no pixels changed: `git mv screenshots/2-play.jpg → 1-play.jpg`,
+`1-title.jpg → 2-title.jpg` (`3-alarm.jpg`, `4-win.jpg` untouched). Cover (first by
+name) is now the active-play frame — judge criterion #1 (complete heist in one frame)
+is the biggest image on the contact sheet. sha256 unchanged by the rename:
+`1-play.jpg 14eecea5…` (was `2-play.jpg`), `2-title.jpg a7f9a57c…` (was `1-title.jpg`).
+Re-verified after the rename: twin-run `MAKEFUN_OUTPUT_DIR=/tmp/outA-fix` vs
+`/tmp/outB-fix` → `diff -r` identical, dossier byte-identical
+(sha256 `43c29748ca645e80ebdc833418e575b706ea39eb9f304f7fbcbcc4a2266dc50e`, 551,555 B);
+screenshots 117,321 / 54,591 / 110,406 / 75,408 B (each ≤256 KiB), all 1280×720.
+New remote HEAD after push: (filled below).
+
 ## Known weaknesses (honest)
 
-1. In `2-play.jpg` the alarm meter reads 0 — no camera caught the thief during the scripted
+1. In `1-play.jpg` the alarm meter reads 0 — no camera caught the thief during the scripted
    walk; the meter itself is visible and the alarm state is shown in `3-alarm.jpg` instead.
 2. In `4-win.jpg` the "YOU" label slightly overlaps the EXIT door edge.
-3. In `2-play.jpg` the camera arc passes behind the LAMPLIGHT callout box.
+3. In `1-play.jpg` the camera arc passes behind the LAMPLIGHT callout box.
 4. A strike throws the thief back to the room door by design (fair caught moment) — the
    guard then chases; this is the intended fail-soft, not a bug.
 5. Levels 3–5 were verified to load + step cleanly, but only level 1 was played end-to-end
